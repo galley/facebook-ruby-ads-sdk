@@ -148,7 +148,7 @@ module FacebookAds
 
     def download(url)
       pathname = Pathname.new(url)
-      name = "#{pathname.basename}.jpg"
+      name = "#{pathname.basename}"
       data = RestClient.get(url).body
       file = File.open("/tmp/#{name}", 'w') # Assume *nix-based system.
       file.binmode
