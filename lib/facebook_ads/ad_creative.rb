@@ -3,7 +3,7 @@ module FacebookAds
   # https://developers.facebook.com/docs/marketing-api/reference/ad-creative
   class AdCreative < Base
     FIELDS               = %w(id name object_story_id object_story_spec object_type thumbnail_url run_status).freeze
-    CALL_TO_ACTION_TYPES = %w(SHOP_NOW INSTALL_MOBILE_APP USE_MOBILE_APP SIGN_UP DOWNLOAD BUY_NOW).freeze
+    CALL_TO_ACTION_TYPES = %w(SHOP_NOW INSTALL_MOBILE_APP USE_MOBILE_APP SIGN_UP DOWNLOAD BUY_NOW LEARN_MORE).freeze
 
     class << self
       def photo(name:, page_id:, instagram_actor_id: nil, message:, link:, link_title:, image_hash:, call_to_action_type:)
@@ -32,7 +32,7 @@ module FacebookAds
       end
 
       # https://developers.facebook.com/docs/marketing-api/guides/videoads
-      def carousel(name:, description:, page_id:, instagram_actor_id: nil, link:, message:, assets:, call_to_action_type:, multi_share_optimized:, multi_share_end_card:)
+      def carousel(name:, page_id:, instagram_actor_id: nil, link:, message:, assets:, call_to_action_type:, multi_share_optimized:, multi_share_end_card:)
         object_story_spec = {
           'page_id' => page_id, # 300664329976860
           'instagram_actor_id' => instagram_actor_id, # 503391023081924
