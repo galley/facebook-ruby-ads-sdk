@@ -32,12 +32,13 @@ module FacebookAds
       end
 
       # https://developers.facebook.com/docs/marketing-api/guides/videoads
-      def carousel(name:, page_id:, instagram_actor_id: nil, link:, message:, assets:, call_to_action_type:, multi_share_optimized:, multi_share_end_card:)
+      def carousel(name:, page_id:, instagram_actor_id: nil, link:, caption:, message:, assets:, call_to_action_type:, multi_share_optimized:, multi_share_end_card:)
         object_story_spec = {
           'page_id' => page_id, # 300664329976860
           'instagram_actor_id' => instagram_actor_id, # 503391023081924
           'link_data' => {
             'link' => link, # https://tophatter.com/, https://itunes.apple.com/app/id619460348, http://play.google.com/store/apps/details?id=com.tophatter
+            'caption' => caption,
             'message' => message,
             'call_to_action' => { 'type' => call_to_action_type },
             'child_attachments' => assets.collect do |asset|
