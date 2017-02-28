@@ -11,7 +11,7 @@ module FacebookAds
       end
     end
 
-    def hash
+    def image_hash
       self[:hash]
     end
 
