@@ -9,8 +9,10 @@ module FacebookAds
       def get(path, query: {}, objectify:)
         query = pack(query, objectify: objectify) # Adds access token, fields, etc.
         uri = "#{FacebookAds.base_uri}#{path}?" + build_nested_query(query)
+        puts uri
         FacebookAds.logger.debug "GET #{uri}"
         response = begin
+          puts uri
           RestClient.get(uri)
         rescue RestClient::Exception => e
           exception(:get, path, e)
@@ -21,8 +23,11 @@ module FacebookAds
       def post(path, query: {})
         query = pack(query, objectify: false)
         uri = "#{FacebookAds.base_uri}#{path}"
+        puts uri
         FacebookAds.logger.debug "POST #{uri} #{query}"
         response = begin
+          puts uri
+          puts query
           RestClient.post(uri, query)
         rescue RestClient::Exception => e
           exception(:post, path, e)
