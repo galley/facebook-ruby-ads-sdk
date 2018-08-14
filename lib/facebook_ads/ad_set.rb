@@ -10,7 +10,7 @@ module FacebookAds
     #   creative_sequence daily_budget effective_status end_time
     #   frequency_cap frequency_cap_reset_period
     #   frequency_control_specs instagram_actor_id
-    #   is_autobid is_average_price_pacing lifetime_budget
+    #   bid_strategy lifetime_budget
     #   lifetime_frequency_cap lifetime_imps name optimization_goal
     #   pacing_type promoted_object recommendations
     #   recurring_budget_semantics rf_prediction_id rtb_flag
@@ -20,20 +20,46 @@ module FacebookAds
     # ).freeze
 
     # Fields we might actually care about:
-    FIELDS = %w(
+    FIELDS = %w[
       id account_id campaign_id
       name
       status configured_status effective_status
-      bid_amount billing_event optimization_goal pacing_type
+      bid_strategy bid_amount billing_event optimization_goal pacing_type
       daily_budget budget_remaining lifetime_budget
       promoted_object
       targeting
       created_time updated_time
-    ).freeze
+    ].freeze
 
-    STATUSES           = %w(ACTIVE PAUSED DELETED PENDING_REVIEW DISAPPROVED PREAPPROVED PENDING_BILLING_INFO CAMPAIGN_PAUSED ARCHIVED ADSET_PAUSED).freeze
-    BILLING_EVENTS     = %w(APP_INSTALLS IMPRESSIONS).freeze
-    OPTIMIZATION_GOALS = %w(APP_INSTALLS OFFSITE_CONVERSIONS IMPRESSIONS CLICKS).freeze
+    STATUSES           = %w[ACTIVE PAUSED DELETED PENDING_REVIEW DISAPPROVED PREAPPROVED PENDING_BILLING_INFO CAMPAIGN_PAUSED ARCHIVED ADSET_PAUSED].freeze
+    BILLING_EVENTS     = %w[APP_INSTALLS IMPRESSIONS].freeze
+    OPTIMIZATION_GOALS = %w[
+      NONE
+      APP_INSTALLS
+      BRAND_AWARENESS
+      AD_RECALL_LIFT
+      CLICKS
+      ENGAGED_USERS
+      EVENT_RESPONSES
+      IMPRESSIONS
+      LEAD_GENERATION
+      LINK_CLICKS
+      OFFER_CLAIMS
+      OFFSITE_CONVERSIONS
+      PAGE_ENGAGEMENT
+      PAGE_LIKES
+      POST_ENGAGEMENT
+      REACH
+      SOCIAL_IMPRESSIONS
+      VIDEO_VIEWS
+      APP_DOWNLOADS
+      LANDING_PAGE_VIEWS
+    ].freeze
+    BID_STRATEGIES = %w[
+      LOWEST_COST_WITHOUT_CAP
+      LOWEST_COST_WITH_BID_CAP
+      TARGET_COST
+    ].freeze
 
     # belongs_to ad_account
 
@@ -53,7 +79,7 @@ module FacebookAds
       Ad.paginate("/#{id}/ads", query: { effective_status: effective_status, limit: limit })
     end
 
-    def create_ad(name:, creative_id:, status:, tracking_specs:)
+    def create_ad(name:, creative_id:, status: 'PAUSED', tracking_specs:)
       query = { name: name, adset_id: id, creative: { creative_id: creative_id }.to_json, status: status, tracking_specs: tracking_specs }
       result = Ad.post("/act_#{account_id}/ads", query: query)
       Ad.find(result['id'])

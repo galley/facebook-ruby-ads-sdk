@@ -1,6 +1,6 @@
 [![Gem Version](https://badge.fury.io/rb/facebook_ads.svg)](https://badge.fury.io/rb/facebook_ads)
-[![Build Status](https://travis-ci.org/cte/facebook-ruby-ads-sdk.svg?branch=master)](https://travis-ci.org/cte/facebook-ruby-ads-sdk)
-[![Coverage Status](https://coveralls.io/repos/github/cte/facebook-ruby-ads-sdk/badge.svg?branch=master)](https://coveralls.io/github/cte/facebook-ruby-ads-sdk?branch=master)
+[![Build Status](https://travis-ci.org/tophatter/facebook-ruby-ads-sdk.svg?branch=master)](https://travis-ci.org/tophatter/facebook-ruby-ads-sdk)
+[![Coverage Status](https://coveralls.io/repos/github/tophatter/facebook-ruby-ads-sdk/badge.svg?branch=master)](https://coveralls.io/github/tophatter/facebook-ruby-ads-sdk?branch=master)
 
 # [Facebook Marketing API](https://developers.facebook.com/docs/marketing-apis) SDK for Ruby
 
@@ -26,6 +26,20 @@ You'll need an [Access Token](https://developers.facebook.com/docs/marketing-api
 
 ```ruby
 FacebookAds.access_token = '[YOUR_ACCESS_TOKEN]'
+```
+
+You can also optionally include an [App Secret](https://developers.facebook.com/docs/accountkit/graphapi#app-tokens) if you need one for your application.
+
+```ruby
+FacebookAds.app_secret = '[YOUR_APP_SECRET]'
+```
+
+## API Version
+
+This gem currently uses v2.9 of the Marketing API (2.10 is released as of 7/18/2017). You can change the version as desired with the following:
+
+```ruby
+FacebookAds.base_uri = 'https://graph.facebook.com/v2.10'
 ```
 
 ## Console
@@ -143,7 +157,7 @@ ___
 Notes:
 * Images cannot be updated.
 * You can upload the same image multiple times and Facebook will de-duplicate them server side.
-* An image will always generate the same hash on Facebook's end - event across ad accounts.
+* An image will always generate the same hash on Facebook's end - even across ad accounts.
 * Image uploading via a URL currently assumes a \*nix system (Mac OS, linux). It likely will fail on Windows. A cross-platform tempfile-based solution is in the works.
 * You can't destroy an image if its being used by a creative. You have to destroy the creative first.
 
@@ -196,7 +210,7 @@ carousel_ad_creative = account.create_ad_creative({
   call_to_action_type: 'SHOP_NOW',
   multi_share_optimized: true,
   multi_share_end_card: false
-}, carousel: true)
+}, creative_type: 'carousel')
 ```
 See FacebookAds::AdCreative::CALL_TO_ACTION_TYPES for a list of all call to action types.
 
@@ -210,8 +224,20 @@ image_ad_creative = account.create_ad_creative({
   link_title: 'A link title.',
   image_hash: ad_images.first.hash,
   call_to_action_type: 'SHOP_NOW'
-}, carousel: false)
+}, creative_type: 'image')
 ```
+
+Create a single creative for a web link:
+```ruby
+image_ad_creative = account.create_ad_creative({
+  title: 'Test Link Title', 
+  body: 'Link Description Text', 
+  object_url: 'www.example.com/my-ad-link', 
+  link_url: 'www.example.com/my-ad-link',
+  image_hash: ad_images.first.hash,
+}, creative_type: 'link')
+```
+
 The options will be different depending on the thing being advertised (Android app, iOS app or website).
 
 Find a creative by ID:
@@ -286,11 +312,13 @@ ad_set = campaign.create_ad_set(
   optimization_goal: 'OFFSITE_CONVERSIONS',
   daily_budget: 500, # This is in cents, so the daily budget here is $5.
   billing_event: 'IMPRESSIONS',
-  status: 'PAUSED'
+  status: 'PAUSED',
+  bid_strategy: 'LOWEST_COST_WITHOUT_CAP'
 )
 ```
 See FacebookAds::AdSet::OPTIMIZATION_GOALS for a list of all optimization goals.
 See FacebookAds::AdSet::BILLING_EVENTS for a list of all billing events.
+See FacebookAds::AdSet::BID_STRATEGIES for a list of all bid strategies.
 
 Find an ad set by ID:
 ```ruby
