@@ -1,11 +1,11 @@
 module FacebookAds
   # https://developers.facebook.com/docs/marketing-api/reference/product-catalog
   class AdProductCatalog < Base
-    FIELDS = %w(id name vertical product_count feed_count).freeze
+    FIELDS = %w[id name vertical product_count feed_count].freeze
 
     class << self
       def all(query = {})
-        get("/#{FacebookAds.business_id}/product_catalogs", query: query, objectify: true)
+        get("/#{FacebookAds.business_id}/owned_product_catalogs", query: query, objectify: true)
       end
 
       def find_by(conditions)
@@ -18,7 +18,7 @@ module FacebookAds
 
       def create(name:)
         query = { name: name }
-        result = post("/#{FacebookAds.business_id}/product_catalogs", query: query)
+        result = post("/#{FacebookAds.business_id}/owned_product_catalogs", query: query)
         find(result['id'])
       end
     end

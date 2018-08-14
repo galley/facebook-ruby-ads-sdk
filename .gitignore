@@ -1,5 +1,10 @@
-.DS_Store
-test_access_token
-test_business_id
-coverage
 *.gem
+/Gemfile.lock
+/.approvals
+/.bundle
+/coverage
+.DS_Store
+
+/test_access_token
+/test_business_id
+.idea
